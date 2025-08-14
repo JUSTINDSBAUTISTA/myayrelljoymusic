@@ -1,0 +1,95 @@
+<!-- playlists.html (clean + pro, with unique 'playlists-*' classes and legacy classes kept for compatibility) -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Playlists · My Player</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="playlists.css" />
+    <link rel="icon" href="data:,">
+
+    <!-- Shared track data -->
+    <script src="tracks.js"></script>
+
+    <!-- Page JS -->
+    <script src="playlists.js" defer></script>
+
+    <!-- Range color sync for volume -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const vr = document.getElementById("volume-range");
+        const sync = () => vr && vr.style.setProperty("--val", vr.value);
+        sync(); vr?.addEventListener("input", sync); vr?.addEventListener("change", sync);
+      });
+    </script>
+  </head>
+
+  <body>
+    <main>
+      <div class="playlists-content playlist-content">
+        <!-- Header -->
+        <header class="playlists-header app-header">
+          <div class="playlists-brand brand">
+            <i class="fa-solid fa-list"></i><span>Playlists</span>
+          </div>
+
+          <div class="playlists-header-actions header-actions">
+            <a href="index.html" class="playlists-btn btn-favs" title="Back to Player">
+              <i class="fa-solid fa-arrow-left"></i><span>Player</span>
+            </a>
+
+            <div class="playlists-search search" aria-label="Search playlists or tracks">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="search" id="plSearch" placeholder="Search playlists or tracks…" autocomplete="off" />
+              <button id="plClear" title="Clear" aria-label="Clear search">×</button>
+            </div>
+
+            <!-- Create new playlist -->
+            <div class="playlists-create search" aria-label="Create playlist">
+              <i class="fa-solid fa-plus"></i>
+              <input id="newPlName" type="text" placeholder="New playlist name" autocomplete="off" />
+              <button id="createPlBtn" class="playlists-create-btn btn">
+                <i class="fa-solid fa-circle-check"></i>&nbsp;Create
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <!-- Playlists grid -->
+        <section id="plContainer" class="playlists-grid"><!-- cards injected by playlists.js --></section>
+
+        <!-- Sticky Player -->
+        <div class="playlists-player player">
+          <audio id="plAudio" preload="metadata" crossorigin="anonymous"></audio>
+
+          <div class="playlists-now-playing now-playing">
+            <small id="npText">Nothing playing</small>
+          </div>
+
+          <div class="playlists-controls controls">
+            <i class="fa-solid fa-shuffle" id="shuffleBtn" title="Shuffle"></i>
+            <i class="fa-solid fa-backward" id="prevBtn" title="Previous"></i>
+
+            <button id="playPauseBtn" aria-label="Play/Pause">
+              <i class="fa-solid fa-play" id="playPauseIcon" aria-hidden="true"></i>
+            </button>
+
+            <i class="fa-solid fa-stop" id="stopBtn" title="Stop"></i>
+            <i class="fa-solid fa-forward" id="nextBtn" title="Next"></i>
+
+            <div class="playlists-volume volume" title="Volume">
+              <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
+              <input type="range" id="volume-range" min="0" max="100" value="100" />
+            </div>
+          </div>
+
+          <input type="range" value="0" id="progress-bar" min="0" max="100" />
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+<!-- index.html (updated with Playlists link in header and shared tracks.js) -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,29 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Music Player · Swiper + Playlist</title>
 
-    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper@11/swiper-bundle.min.css" />
-
-    <!-- Font Awesome (icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-    <!-- App CSS -->
     <link rel="stylesheet" href="style.css" />
-
-    <!-- Silence favicon 404 -->
     <link rel="icon" href="data:,">
 
-    <!-- App JS (defer) -->
+    <!-- Shared track data -->
+    <script src="tracks.js"></script>
+
+    <!-- App JS -->
     <script src="main.js" defer></script>
 
-    <!-- Range color sync (updates CSS var --val for live filled track) -->
+    <!-- Range color sync -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const vr = document.getElementById("volume-range");
         const sync = () => vr && vr.style.setProperty("--val", vr.value);
-        sync();
-        vr.addEventListener("input", sync);
-        vr.addEventListener("change", sync);
+        sync(); vr?.addEventListener("input", sync); vr?.addEventListener("change", sync);
       });
     </script>
   </head>
@@ -35,11 +30,26 @@
   <body>
     <main>
       <div class="content">
-        <div class="slider-playlist">
-          <div class="swiper">
-            <div class="swiper-wrapper"><!-- injected by JS --></div>
+        <!-- Header -->
+        <header class="app-header">
+          <div class="brand"><i class="fa-solid fa-music"></i><span>My Player</span></div>
+          <div class="header-actions">
+            <a href="playlists.html" class="btn-favs" title="Manage Playlists">
+              <i class="fa-solid fa-list-music"></i><span>Playlists</span>
+            </a>
+            <div class="search">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="search" id="searchInput" placeholder="Search artist or title…" autocomplete="off" />
+              <button id="clearSearch" title="Clear" aria-label="Clear search">×</button>
+            </div>
+            <button id="favoritesBtn" class="btn-favs" aria-expanded="false" aria-controls="favoritesPanel">
+              <i class="fa-regular fa-heart"></i><span>Favorites</span><em id="favCount">0</em>
+            </button>
           </div>
+        </header>
 
+        <div class="slider-playlist">
+          <div class="swiper"><div class="swiper-wrapper"><!-- injected by JS --></div></div>
           <div class="playlist"><!-- injected by JS --></div>
         </div>
 
@@ -57,13 +67,45 @@
               <input type="range" id="volume-range" min="0" max="100" value="100" />
             </div>
           </div>
-
           <input type="range" value="0" id="progress-bar" min="0" max="100" />
+        </div>
+
+        <!-- Favorites Panel -->
+        <aside id="favoritesPanel" class="favorites-panel" hidden>
+          <div class="fav-header">
+            <h2>Favorites</h2>
+            <button id="closeFavs" title="Close" aria-label="Close favorites">×</button>
+          </div>
+          <div class="favorites-list"><!-- injected by JS --></div>
+        </aside>
+
+        <!-- Add to Playlist Modal (per-item delete) -->
+        <div id="playlistModal" class="modal" hidden aria-modal="true" role="dialog" aria-labelledby="plTitle">
+          <div class="modal-card">
+            <div class="modal-head">
+              <h3 id="plTitle"><i class="fa-solid fa-square-plus"></i> Add to playlist</h3>
+              <button id="plClose" class="icon-btn" aria-label="Close">×</button>
+            </div>
+
+            <div class="modal-body">
+              <div class="pl-create" aria-label="Create playlist">
+                <input id="plNewName" type="text" placeholder="New playlist name" />
+                <button id="plCreate" class="btn">Create</button>
+              </div>
+
+              <div class="pl-list" aria-label="Playlists"><!-- rows injected by JS --></div>
+              <small style="opacity:.7">Tip: check a playlist to add this track. Use the trash icon to delete a playlist.</small>
+            </div>
+
+            <div class="modal-foot">
+              <button id="plCancel" class="btn ghost">Cancel</button>
+              <button id="plSave" class="btn primary">Add</button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
 
-    <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
   </body>
 </html>
